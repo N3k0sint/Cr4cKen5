@@ -1,0 +1,11 @@
+admin
+password
+123456
+root
+guest
+administrator
+12345
+qwerty
+pass
+user
+support
