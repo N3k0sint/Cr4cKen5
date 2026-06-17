@@ -529,7 +529,10 @@ class CyberDashboard:
             # Setup exit first Option (-f)
             exit_opt = " -f" if self.hydra_exit_first.get() else ""
             
-            base_cmd = f"hydra -t {tasks}{exit_opt} {user_opt} -P {wl}"
+            # Setup port Option (-s) if specified in target URL
+            port_opt = f" -s {parsed.port}" if parsed.port else ""
+            
+            base_cmd = f"hydra -t {tasks}{exit_opt}{port_opt} {user_opt} -P {wl}"
             if "form" in proto:
                 path = self.hydra_form_path.get().strip()
                 body = self.hydra_form_body.get().strip()

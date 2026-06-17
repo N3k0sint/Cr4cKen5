@@ -19,8 +19,6 @@ Welcome to the **Cr4cKen5** user manual. This guide outlines the capabilities of
 6. [Prerequisites & System Setup](#6-prerequisites--system-setup)
    - [Git Cloning Method](#git-cloning-method)
    - [Linux Environment Setup](#linux-environment-setup)
-   - [Windows Environment Setup](#windows-environment-setup)
-   - [Standalone Executable Packaging (.exe)](#standalone-executable-packaging-exe)
 
 ---
 
@@ -32,7 +30,7 @@ Welcome to the **Cr4cKen5** user manual. This guide outlines the capabilities of
 * **Left-Hand Sidebar Navigation:** Seamlessly toggle between different modules without losing settings in other tabs.
 * **Enterprise Dark Theme:** Styled using a clean, modern palette featuring deep slate backgrounds, indigo accents, and high-contrast monospaced command preview windows.
 * **Live Command Previewer:** Dynamically builds and updates the exact command-line syntax in real time as you adjust inputs and checkboxes.
-* **Detached Execution:** Spawns scans inside a native terminal emulator (e.g., `qterminal` or Windows `cmd.exe`), allowing you to view stdout in real time and run multiple tools concurrently.
+* **Detached Execution:** Spawns scans inside a native terminal emulator (e.g., `qterminal`), allowing you to view stdout in real time and run multiple tools concurrently.
 
 ---
 
@@ -66,13 +64,13 @@ Used to perform host discovery and network auditing.
 ### DIRB Web Mapper
 Used to locate hidden directories and files on web servers.
 * **Options:**
-  * **Dictionary Wordlist:** Specify the dictionary file paths. Defaults to `/usr/share/dirb/wordlists/common.txt` on Linux, and a built-in fallback wordlist extracted to `%TEMP%\cracken5_default_wordlist.txt` on Windows.
+  * **Dictionary Wordlist:** Specify the dictionary file paths. Defaults to `/usr/share/dirb/wordlists/common.txt` on Linux.
   * **Quiet Mode (`-S`):** Suppresses redundant messages and warnings during discovery.
 
 ### Wfuzz Parameter Fuzzer
 Used to find web resources, paths, or fuzzed query parameters by replacing the `/FUZZ` string with wordlist entries.
 * **Options:**
-  * **Dictionary Wordlist:** Select a fuzzing dictionary. Defaults to `/usr/share/wfuzz/wordlist/general/common.txt` on Linux, and `%TEMP%\cracken5_default_wordlist.txt` on Windows.
+  * **Dictionary Wordlist:** Select a fuzzing dictionary. Defaults to `/usr/share/wfuzz/wordlist/general/common.txt` on Linux.
   * **Hide HTTP Code (`--hc`):** Filters out unhelpful HTTP response codes (e.g., hiding `404` to only display positive matches).
 
 ### Hydra Login Auditor
@@ -105,24 +103,15 @@ Used to analyze and visualize findings aggregated from automated scans.
 Standard command execution wrappers in Python often fail when dealing with complex nested characters. 
 
 ### How Cr4cKen5 Solves This:
-1. When you click **EXECUTE SUITE**, the script generates a temporary launcher file inside the system temp directory (`/tmp/` on Linux, `%TEMP%` on Windows).
-2. It writes a proper script header (`#!/bin/bash` or `@echo off`), inserts the exact command, and adds a pause command:
-   * **Linux:**
-     ```bash
-     #!/bin/bash
-     sqlmap -u 'http://...' --data="..." -p username
-     echo
-     echo 'Scan complete.'
-     read -p 'Press Enter to close...'
-     ```
-   * **Windows:**
-     ```cmd
-     @echo off
-     sqlmap -u 'http://...' --data="..." -p username
-     echo.
-     echo Scan complete.
-     pause
-     ```
+1. When you click **EXECUTE SUITE**, the script generates a temporary launcher file inside the system temp directory (`/tmp/` on Linux).
+2. It writes a proper script header (`#!/bin/bash`), inserts the exact command, and adds a pause command:
+   ```bash
+   #!/bin/bash
+   sqlmap -u 'http://...' --data="..." -p username
+   echo
+   echo 'Scan complete.'
+   read -p 'Press Enter to close...'
+   ```
 3. It launches the temporary script inside a newly spawned visible terminal window, ensuring the GUI remains fully responsive.
 
 ---
@@ -131,7 +120,7 @@ Standard command execution wrappers in Python often fail when dealing with compl
 
 The reports engine performs multi-source correlation:
 1. **Nmap XML Parsing:** Reads XML outputs to parse out open port records, service brands, and software versions. It assigns severities (e.g. Medium for insecure plain-text protocols, High for administrative service interfaces).
-2. **SQLMap Logs parsing:** Evaluates active session log files located inside the standard local SQLMap outputs storage (`~/.local/share/sqlmap/output/*/log` or `~/.sqlmap/output/*/log` on Windows). It extracts injection types, vector parameters, techniques, and payloads, assigning a `Critical` severity level.
+2. **SQLMap Logs parsing:** Evaluates active session log files located inside the standard local SQLMap outputs storage (`~/.local/share/sqlmap/output/*/log`). It extracts injection types, vector parameters, techniques, and payloads, assigning a `Critical` severity level.
 3. **HTML Reporting Module:** Aggregates findings and counts the threat metrics. It compiles these into an HTML report utilizing modern, responsive styles, complete with executive summary charts and remediation instructions.
 
 ---
@@ -163,28 +152,3 @@ To run the suite:
 chmod +x cracken5.py
 ./cracken5.py
 ```
-
-### Windows Environment Setup
-1. **Python:** Install Python from python.org. Make sure to check **Add python.exe to PATH** and **tcl/tk and IDLE**.
-2. **Binaries:** Download Nmap, SQLMap, Hydra, and Wfuzz. Extract them and add their directories to the Windows **Path** environment variable in your System Settings.
-3. To run the suite:
-   ```cmd
-   python cracken5_win.py
-   ```
-
-### Standalone Executable Packaging (.exe)
-You can package the Windows dashboard along with its built-in fallback wordlist into a single `.exe` executable file.
-
-1. Install PyInstaller:
-   ```cmd
-   pip install pyinstaller
-   ```
-2. Navigate to the project folder and run the compiler command:
-   ```cmd
-   pyinstaller --onefile --noconsole --add-data "default_wordlist.txt;." cracken5_win.py
-   ```
-3. The executable will be built inside:
-   ```cmd
-   dist\cracken5_win.exe
-   ```
-   You can copy this single `.exe` file to any other folder or machine to run it independently.

@@ -1,6 +1,6 @@
 # Cr4cKen5 - BruteForce Security Suite
 
-An interactive Python graphical user interface (GUI) built with `tkinter` to easily configure, preview, and launch command-line security testing tools (Nmap, DIRB, Wfuzz, Hydra, and SQLMap) on your Kali system or Windows OS.
+An interactive Python graphical user interface (GUI) built with `tkinter` to easily configure, preview, and launch command-line security testing tools (Nmap, DIRB, Wfuzz, Hydra, and SQLMap) on your Kali Linux system.
 
 ---
 
@@ -53,44 +53,3 @@ chmod +x cracken5.py
 ./cracken5.py
 ```
 *(Alternatively, run `python3 cracken5.py`)*
-
----
-
-### Windows Native Setup (cracken5_win.py)
-
-#### 1. Setup Python on Windows
-1. Download Python from the [official website](https://www.python.org/downloads/).
-2. Run the installer and **critically ensure** the following boxes are checked:
-   * **[x] Add python.exe to PATH** (located at the bottom of the installer window).
-   * **[x] tcl/tk and IDLE** (required to run Tkinter GUI layouts).
-
-#### 2. Install Auditing Tools & Configure Environment PATH
-To run the scans from the command prompt, install the target binaries and add their folders to your Windows System **PATH** variables:
-* **Nmap:** Run the official Windows Installer.
-* **SQLMap:** Download SQLMap source zip, extract to `C:\tools\sqlmap`, and add it to PATH.
-* **Hydra / Wfuzz:** Extract the binaries to a permanent directory (e.g., `C:\tools\hydra`), and add that path to Windows system environment variables.
-
-#### 3. Run the Dashboard
-Double-click `cracken5_win.py` or run it from the command prompt:
-```cmd
-python cracken5_win.py
-```
-
----
-
-### Packaging into a Standalone Windows Executable (.exe)
-You can package the Windows dashboard along with its built-in fallback wordlist into a single standalone `.exe` file:
-
-1. Open a Command Prompt window and install PyInstaller:
-   ```cmd
-   pip install pyinstaller
-   ```
-2. Navigate to the project directory and run the compilation command:
-   ```cmd
-   pyinstaller --onefile --noconsole --add-data "default_wordlist.txt;." cracken5_win.py
-   ```
-3. Locate the finished executable inside the newly created `dist\` folder:
-   ```cmd
-   dist\cracken5_win.exe
-   ```
-   You can copy this `.exe` file anywhere or send it to your friend to run directly.
